@@ -9,9 +9,9 @@ module.exports = {
 
 
         const incidents = await connection('incidents')
-        .join('ongs','ong_id', '=', 'incidents.ong_id')
+        .join('ongs','ongs.id', '=', 'incidents.ong_id')
         .limit(5)
-        .offset((page - 1)* 5)
+        .offset((page - 1) * 5)
         .select([
         'incidents.*',
         'ongs.name',
@@ -50,7 +50,11 @@ module.exports = {
         .select('ong_id')
         .first();
 
-        if (incident.ong_id != ong_id){
+        if (!incident) {
+            return res.json({ error: 'Incident not found.' });
+        }
+
+        if (incident.ong_id !== ong_id){
             return response.status(401).json({ error: 'Opertion not permited'});
         }
 
